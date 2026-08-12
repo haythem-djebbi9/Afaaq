@@ -1,0 +1,55 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&family=Cairo:wght@400;500;600;700&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background-color: #f2f4f7;
+  color: #111827;
+  font-family: 'Poppins', 'Cairo', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+[dir='rtl'] {
+  font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
+}
+[dir='rtl'] .font-display {
+  font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
+  letter-spacing: 0;
+}
+input[type='file'] {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid #0d47a1;
+  outline-offset: 2px;
+}
+@keyframes afaaq-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: afaaq-marquee 32s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}

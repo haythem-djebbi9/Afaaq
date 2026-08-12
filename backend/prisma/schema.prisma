@@ -1,0 +1,165 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(uuid())
+  fullName     String
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  residence    String   @default("TN")
+  role         UserRole @default(CLIENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  applications   Application[]
+  notifications  Notification[]
+  sectionReviews SectionReview[] @relation("SectionReviewer")
+  dossierReviews DossierReview[] @relation("DossierReviewer")
+
+  @@map("users")
+}
+
+enum ServiceType {
+  VISA
+  TRAINING
+  JOB
+  DIPLOMA
+}
+
+enum CountryCode {
+  DE
+  AT
+  IT
+  FR
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+}
+
+enum DocumentStatus {
+  UPLOADED
+  ERROR
+}
+
+model Application {
+  id             String            @id @default(uuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service        ServiceType
+  country        CountryCode
+  status         ApplicationStatus @default(DRAFT)
+  personal       Json?
+  passport       Json?
+  languages      Json?
+  education      Json?
+  trainings      Json?
+  experience     Json?
+  objective      Json?
+  documents      Document[]
+  sectionReviews SectionReview[]
+  dossierReview  DossierReview?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("applications")
+}
+
+model Document {
+  id            String         @id @default(uuid())
+  applicationId String
+  application   Application    @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  type          String
+  originalName  String
+  storedName    String
+  mimeType      String
+  size          Int
+  status        DocumentStatus @default(UPLOADED)
+  extractedText String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([applicationId, type])
+  @@map("documents")
+}
+
+enum SectionStatus {
+  PENDING
+  APPROVED
+  NEEDS_CORRECTION
+}
+
+enum DossierReviewStatus {
+  PENDING
+  VALIDATED
+}
+
+model SectionReview {
+  id            String        @id @default(uuid())
+  applicationId String
+  application   Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  section       String
+  status        SectionStatus @default(PENDING)
+  remark        String?
+  remarkFr      String?
+  remarkAr      String?
+  reviewerId    String?
+  reviewer      User?         @relation("SectionReviewer", fields: [reviewerId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([applicationId, section])
+  @@map("section_reviews")
+}
+
+model DossierReview {
+  id            String              @id @default(uuid())
+  applicationId String              @unique
+  application   Application         @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        DossierReviewStatus @default(PENDING)
+  reviewerId    String?
+  reviewer      User?               @relation("DossierReviewer", fields: [reviewerId], references: [id])
+  decidedAt     DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@map("dossier_reviews")
+}
+
+model TranslationCache {
+  id             String   @id @default(uuid())
+  hash           String   @unique
+  targetLang     String
+  sourceText     String
+  translatedText String
+  createdAt      DateTime @default(now())
+
+  @@map("translation_cache")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  meta      Json?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
