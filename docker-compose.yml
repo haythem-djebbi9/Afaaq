@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-afaaq}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-afaaq}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required — set a strong value in .env}
       POSTGRES_DB: ${POSTGRES_DB:-afaaq}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -22,14 +22,18 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-afaaq}:${POSTGRES_PASSWORD:-afaaq}@postgres:5432/${POSTGRES_DB:-afaaq}?schema=public
-      JWT_SECRET: ${JWT_SECRET:-change-me}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-afaaq}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required — set a strong value in .env}@postgres:5432/${POSTGRES_DB:-afaaq}?schema=public
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required — set a strong random value (32+ chars) in .env}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       PORT: 3000
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
       LOG_LEVEL: ${LOG_LEVEL:-log}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:?STRIPE_SECRET_KEY is required — set it in .env}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:?STRIPE_WEBHOOK_SECRET is required — set it in .env}
+      STRIPE_APPLICATION_FEE_CENTS: ${STRIPE_APPLICATION_FEE_CENTS:-2000}
+      APP_URL: ${APP_URL:-http://localhost:8080}
     volumes:
       - backend_uploads:/app/uploads
     ports:

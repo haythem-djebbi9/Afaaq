@@ -87,6 +87,7 @@ export const dictionary: Record<string, Entry> = {
   'step.training': { fr: 'Formation / Études', ar: 'التكوين / الدراسة', de: 'Ausbildung / Studium', en: 'Training / Studies' },
   'step.experience': { fr: 'Expérience professionnelle', ar: 'الخبرة المهنية', de: 'Berufserfahrung', en: 'Work experience' },
   'step.objective': { fr: 'Objectif', ar: 'الهدف', de: 'Zielsetzung', en: 'Objective' },
+  'step.payment': { fr: 'Paiement', ar: 'الدفع', de: 'Zahlung', en: 'Payment' },
   'step.documents': { fr: 'Documents', ar: 'الوثائق', de: 'Dokumente', en: 'Documents' },
   'step.review': { fr: 'Récapitulatif', ar: 'المراجعة', de: 'Zusammenfassung', en: 'Summary' },
 
@@ -200,6 +201,28 @@ export const dictionary: Record<string, Entry> = {
   'hint.experience': { fr: 'Ajoutez vos expériences pertinentes des 10 dernières années.', ar: 'أضف خبراتك ذات الصلة خلال السنوات العشر الأخيرة.', de: 'Fügen Sie relevante Erfahrungen der letzten 10 Jahre hinzu.', en: 'Add your relevant experience from the last 10 years.' },
   'hint.objective': { fr: 'Les options dépendent du service et du pays choisis.', ar: 'تعتمد الخيارات على الخدمة والبلد المختارين.', de: 'Die Optionen hängen von Service und Land ab.', en: 'Options depend on the service and country chosen.' },
   'hint.documents': { fr: 'PDF, JPG ou PNG — 10 Mo maximum par fichier.', ar: 'PDF أو JPG أو PNG — ١٠ ميغابايت كحد أقصى لكل ملف.', de: 'PDF, JPG oder PNG — maximal 10 MB pro Datei.', en: 'PDF, JPG or PNG — 10 MB maximum per file.' },
+  'hint.payment': {
+    fr: 'Le paiement des frais de dossier est requis pour pouvoir soumettre votre candidature.',
+    ar: 'دفع مصاريف الملف مطلوب لتتمكن من تقديم طلبك.',
+    de: 'Die Zahlung der Bearbeitungsgebühr ist erforderlich, um Ihren Antrag einzureichen.',
+    en: 'Payment of the application fee is required before you can submit your application.'
+  },
+  'payment.title': { fr: 'Frais de dossier', ar: 'مصاريف الملف', de: 'Bearbeitungsgebühr', en: 'Application fee' },
+  'payment.subtitle': {
+    fr: 'Un paiement unique de 20,00 € est nécessaire pour finaliser et soumettre votre dossier.',
+    ar: 'دفعة واحدة بقيمة ٢٠٫٠٠ € ضرورية لإتمام وتقديم ملفك.',
+    de: 'Eine einmalige Zahlung von 20,00 € ist erforderlich, um Ihren Antrag abzuschließen und einzureichen.',
+    en: 'A one-time payment of €20.00 is required to finalize and submit your application.'
+  },
+  'payment.payNow': { fr: 'Payer maintenant', ar: 'ادفع الآن', de: 'Jetzt bezahlen', en: 'Pay now' },
+  'payment.redirecting': { fr: 'Redirection…', ar: 'جارٍ التحويل…', de: 'Weiterleitung…', en: 'Redirecting…' },
+  'payment.paidTitle': { fr: 'Paiement effectué', ar: 'تم الدفع', de: 'Zahlung erfolgt', en: 'Payment completed' },
+  'payment.paidSubtitle': {
+    fr: 'Les frais de dossier ont bien été réglés. Vous pouvez continuer votre candidature.',
+    ar: 'تم دفع مصاريف الملف بنجاح. يمكنك متابعة طلبك.',
+    de: 'Die Bearbeitungsgebühr wurde erfolgreich bezahlt. Sie können mit Ihrem Antrag fortfahren.',
+    en: 'The application fee has been paid. You can continue with your application.'
+  },
 
   'doc.drop': { fr: 'Glissez vos documents ici', ar: 'اسحب وثائقك إلى هنا', de: 'Dokumente hierher ziehen', en: 'Drop your documents here' },
   'doc.browse': { fr: 'ou parcourir vos fichiers', ar: 'أو تصفح ملفاتك', de: 'oder Dateien durchsuchen', en: 'or browse your files' },

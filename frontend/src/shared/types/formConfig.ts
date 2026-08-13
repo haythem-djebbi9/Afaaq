@@ -34,7 +34,7 @@ export interface DocumentRequirementConfig {
   required: boolean;
 }
 
-export type StepKind = 'fields' | 'documents' | 'review';
+export type StepKind = 'fields' | 'documents' | 'payment' | 'review';
 
 export interface StepConfig {
   id: string;

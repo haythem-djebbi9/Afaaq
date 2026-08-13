@@ -82,6 +82,13 @@ docker compose up --build -d
   (`backend/prisma/migrations`) sont rejouées via `prisma migrate deploy` à chaque démarrage.
 - Sécurité API : `helmet`, CORS restreint par `CORS_ORIGIN`, rate limiting (`@nestjs/throttler`,
   120 req/min/IP par défaut).
+- Démarrage fail-fast : le backend refuse de démarrer si `DATABASE_URL` ou `JWT_SECRET` sont
+  absents, ou si `JWT_SECRET` fait moins de 32 caractères — aucun secret par défaut n'est utilisé
+  en silence. `docker-compose.yml` a la même contrainte sur `POSTGRES_PASSWORD` et `JWT_SECRET`
+  (`docker compose up` échoue immédiatement si `.env` n'est pas renseigné).
+- TLS : le conteneur `frontend` (nginx) et le backend ne parlent qu'en HTTP simple — la
+  terminaison TLS doit être assurée par un reverse proxy / load balancer placé devant
+  (Traefik, Caddy, load balancer du fournisseur cloud, etc.).
 - Logs : niveau configurable via `LOG_LEVEL` (`error` | `warn` | `log` | `debug` | `verbose`).
 - Healthcheck : `GET /health` (hors préfixe `/api`, vérifie la connexion à PostgreSQL) — utilisé
   par le `HEALTHCHECK` du conteneur backend.

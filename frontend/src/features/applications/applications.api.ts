@@ -4,6 +4,7 @@ export type BackendServiceType = 'VISA' | 'TRAINING' | 'JOB' | 'DIPLOMA';
 export type BackendCountryCode = 'DE' | 'AT' | 'IT' | 'FR';
 export type DocumentStatus = 'UPLOADED' | 'ERROR';
 export type ApplicationStatus = 'DRAFT' | 'SUBMITTED';
+export type PaymentStatus = 'UNPAID' | 'PAID';
 
 export interface DocumentRequirement {
   type: string;
@@ -34,6 +35,7 @@ export interface ApplicationRecord {
   trainings: unknown[] | null;
   experience: unknown[] | null;
   objective: Record<string, unknown> | null;
+  paymentStatus: PaymentStatus;
   requirements: DocumentRequirement[];
   documents: DocumentRecord[];
 }
@@ -84,6 +86,14 @@ export function updateApplicationData(
     token,
     method: 'PATCH',
     body: JSON.stringify(payload),
+    mapErrorCode: codeFromStatus,
+  });
+}
+
+export function createCheckoutSession(token: string, applicationId: string) {
+  return apiRequest<{ url: string }>(`/applications/${applicationId}/checkout-session`, {
+    token,
+    method: 'POST',
     mapErrorCode: codeFromStatus,
   });
 }
