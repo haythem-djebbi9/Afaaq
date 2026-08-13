@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { AdminRoute } from './components/AdminRoute';
-import { LoadingScreen } from './components/LoadingScreen';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { AuthProvider } from './contexts/AuthContext';
-import { LocaleProvider } from './contexts/LocaleContext';
-import { AdminCandidateDetailPage } from './pages/admin/AdminCandidateDetailPage';
-import { AdminCandidatesPage } from './pages/admin/AdminCandidatesPage';
-import { Application } from './pages/Application';
-import { Home } from './pages/Home';
-import { MyDossier } from './pages/MyDossier';
-import { NewApplication } from './pages/NewApplication';
-import { Services } from './pages/Services';
-import { SignIn } from './pages/SignIn';
-import { SignUp } from './pages/SignUp';
+import { AdminRoute } from '@/features/auth/AdminRoute';
+import { LoadingScreen } from '@/shared/components/LoadingScreen';
+import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
+import { AuthProvider } from '@/features/auth/AuthContext';
+import { LocaleProvider } from '@/shared/i18n/LocaleContext';
+import { ChatWidget } from '@/features/chatbot/ChatWidget';
+import { AdminCandidateDetailPage } from '@/features/admin/AdminCandidateDetailPage';
+import { AdminCandidatesPage } from '@/features/admin/AdminCandidatesPage';
+import { Application } from '@/features/applications/Application';
+import { Home } from '@/features/marketing/Home';
+import { MyDossier } from '@/features/applications/MyDossier';
+import { NewApplication } from '@/features/applications/NewApplication';
+import { Services } from '@/features/marketing/Services';
+import { SignIn } from '@/features/auth/SignIn';
+import { SignUp } from '@/features/auth/SignUp';
 
 export function App() {
   const [loading, setLoading] = useState(true);
@@ -86,6 +87,7 @@ export function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <ChatWidget />
         </AuthProvider>
       </LocaleProvider>
       <AnimatePresence>

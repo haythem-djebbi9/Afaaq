@@ -28,6 +28,7 @@ model User {
   notifications  Notification[]
   sectionReviews SectionReview[] @relation("SectionReviewer")
   dossierReviews DossierReview[] @relation("DossierReviewer")
+  chatbotMessages ChatbotMessage[]
 
   @@map("users")
 }
@@ -162,4 +163,21 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@map("notifications")
+}
+
+enum ChatbotRole {
+  USER
+  ASSISTANT
+}
+
+model ChatbotMessage {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      ChatbotRole
+  content   String
+  createdAt DateTime    @default(now())
+
+  @@index([userId, createdAt])
+  @@map("chatbot_messages")
 }
