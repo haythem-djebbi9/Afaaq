@@ -23,7 +23,7 @@ export const services: ServiceDef[] = [
   titleKey: 'svc.visa.title',
   descKey: 'svc.visa.desc',
   icon: 'stamp',
-  steps: 9,
+  steps: 10,
   duration: { fr: '6 – 10 semaines', ar: '٦ – ١٠ أسابيع', de: '6 – 10 Wochen', en: '6 – 10 weeks' },
   countries: ['DE', 'AT', 'IT', 'FR']
 },
@@ -32,7 +32,7 @@ export const services: ServiceDef[] = [
   titleKey: 'svc.training.title',
   descKey: 'svc.training.desc',
   icon: 'graduation',
-  steps: 9,
+  steps: 10,
   duration: { fr: '3 – 6 mois', ar: '٣ – ٦ أشهر', de: '3 – 6 Monate', en: '3 – 6 months' },
   countries: ['DE', 'AT', 'FR', 'IT']
 },
@@ -41,7 +41,7 @@ export const services: ServiceDef[] = [
   titleKey: 'svc.job.title',
   descKey: 'svc.job.desc',
   icon: 'briefcase',
-  steps: 9,
+  steps: 10,
   duration: { fr: '2 – 5 mois', ar: '٢ – ٥ أشهر', de: '2 – 5 Monate', en: '2 – 5 months' },
   countries: ['DE', 'AT', 'IT', 'FR']
 },
@@ -50,7 +50,7 @@ export const services: ServiceDef[] = [
   titleKey: 'svc.diploma.title',
   descKey: 'svc.diploma.desc',
   icon: 'certificate',
-  steps: 9,
+  steps: 10,
   duration: { fr: '8 – 14 semaines', ar: '٨ – ١٤ أسبوعًا', de: '8 – 14 Wochen', en: '8 – 14 weeks' },
   countries: ['DE', 'AT', 'IT', 'FR']
 }];
