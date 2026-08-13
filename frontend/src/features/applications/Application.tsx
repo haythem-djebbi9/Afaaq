@@ -5,6 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckCircle2Icon, XIcon } from 'lucide-r
 import { AppHeader } from '@/shared/components/AppHeader';
 import { DynamicReview } from '@/features/applications/components/DynamicReview';
 import { DynamicStep } from '@/features/applications/components/DynamicStep';
+import { PaymentStep } from '@/features/applications/components/PaymentStep';
 import { ProgressBar, Stepper } from '@/features/applications/components/Stepper';
 import { Button } from '@/shared/components/ui/Button';
 import { Card } from '@/shared/components/ui/Card';
@@ -27,6 +28,9 @@ export function Application() {
   const requirements = useApplicationWizard((s) => s.requirements);
   const documents = useApplicationWizard((s) => s.documents);
   const status = useApplicationWizard((s) => s.status);
+  const paymentStatus = useApplicationWizard((s) => s.paymentStatus);
+  const startingCheckout = useApplicationWizard((s) => s.startingCheckout);
+  const checkoutError = useApplicationWizard((s) => s.checkoutError);
   const loading = useApplicationWizard((s) => s.loading);
   const loadError = useApplicationWizard((s) => s.loadError);
   const saving = useApplicationWizard((s) => s.saving);
@@ -37,6 +41,8 @@ export function Application() {
   const createApplication = useApplicationWizard((s) => s.createApplication);
   const loadApplication = useApplicationWizard((s) => s.loadApplication);
   const saveStep = useApplicationWizard((s) => s.saveStep);
+  const startCheckout = useApplicationWizard((s) => s.startCheckout);
+  const refreshPaymentStatus = useApplicationWizard((s) => s.refreshPaymentStatus);
   const submit = useApplicationWizard((s) => s.submit);
   const reset = useApplicationWizard((s) => s.reset);
 
@@ -69,6 +75,22 @@ export function Application() {
     return () => reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const payment = searchParams.get('payment');
+    if (!payment || !config) return;
+
+    void refreshPaymentStatus();
+    const paymentStepIndex = config.steps.findIndex((s) => s.kind === 'payment');
+    if (paymentStepIndex >= 0) setCurrent(paymentStepIndex);
+
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete('payment');
+      return next;
+    }, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config]);
 
   const service = services.find((s) => s.id === serviceId) || services[0];
   const target = countries.find((c) => c.code === country) || countries[0];
@@ -193,6 +215,7 @@ export function Application() {
                   stepData={stepData}
                   requirements={requirements}
                   documents={documents}
+                  paymentStatus={paymentStatus}
                   onEdit={goTo}
                   declared={declared}
                   onDeclare={setDeclared}
@@ -200,6 +223,12 @@ export function Application() {
                   submitError={submitError}
                   submitting={submitting}
                   onSubmit={() => void submit()} /> :
+                activeStep.kind === 'payment' ?
+                <PaymentStep
+                  paymentStatus={paymentStatus}
+                  starting={startingCheckout}
+                  error={checkoutError}
+                  onPay={() => void startCheckout()} /> :
 
 
                 <DynamicStep
@@ -245,13 +274,28 @@ export function Application() {
               }
 
                 <div className="flex flex-col gap-3 sm:ms-auto sm:flex-row sm:items-center">
-                  <Button type="submit" form={FORM_ID} fullWidth className="sm:w-auto">
-                    {t('form.next')}
-                    <ArrowRightIcon
+                  {activeStep.kind === 'payment' ?
+                <Button
+                  onClick={() => goTo(current + 1)}
+                  disabled={paymentStatus !== 'PAID'}
+                  fullWidth
+                  className="sm:w-auto">
+
+                      {t('form.next')}
+                      <ArrowRightIcon
                     className={`h-4 w-4 ${dir === 'rtl' ? 'rotate-180' : ''}`}
                     aria-hidden="true" />
 
-                  </Button>
+                    </Button> :
+
+                <Button type="submit" form={FORM_ID} fullWidth className="sm:w-auto">
+                      {t('form.next')}
+                      <ArrowRightIcon
+                    className={`h-4 w-4 ${dir === 'rtl' ? 'rotate-180' : ''}`}
+                    aria-hidden="true" />
+
+                    </Button>
+                }
                 </div>
               </div>
             }

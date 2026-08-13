@@ -32,6 +32,10 @@ export class ReviewService {
   async listForAdmin(query: AdminListQueryDto) {
     const applications = await this.prisma.application.findMany({
       where: {
+        // Draft dossiers are invisible to admins — submission itself is gated on
+        // payment (applications.service.ts submit()), so this also keeps unpaid
+        // dossiers out of the admin queue.
+        status: 'SUBMITTED',
         ...(query.country ? { country: query.country } : {}),
         ...(query.service ? { service: query.service } : {}),
         ...(query.search
@@ -286,7 +290,7 @@ export class ReviewService {
         dossierReview: true,
       },
     });
-    if (!application) {
+    if (!application || application.status !== 'SUBMITTED') {
       throw new NotFoundException('Dossier introuvable.');
     }
     return application;

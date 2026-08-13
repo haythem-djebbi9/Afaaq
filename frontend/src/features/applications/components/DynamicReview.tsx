@@ -7,7 +7,11 @@ import { Checkbox } from '@/shared/components/ui/Field';
 import { useLocale } from '@/shared/i18n/LocaleContext';
 import { countries, services } from '@/shared/data/services';
 import { stepInitialData } from '@/features/applications/stepDataMapping';
-import type { DocumentRecord, DocumentRequirement } from '@/features/applications/applications.api';
+import type {
+  DocumentRecord,
+  DocumentRequirement,
+  PaymentStatus
+} from '@/features/applications/applications.api';
 import type { CountryCode, ServiceId } from '@/shared/types';
 import type { FormConfig } from '@/shared/types/formConfig';
 
@@ -18,6 +22,7 @@ interface Props {
   stepData: Record<string, unknown>;
   requirements: DocumentRequirement[];
   documents: Record<string, DocumentRecord>;
+  paymentStatus: PaymentStatus | null;
   onEdit: (stepIndex: number) => void;
   declared: boolean;
   onDeclare: (value: boolean) => void;
@@ -34,6 +39,7 @@ export function DynamicReview({
   stepData,
   requirements,
   documents,
+  paymentStatus,
   onEdit,
   declared,
   onDeclare,
@@ -82,6 +88,14 @@ export function DynamicReview({
             {step.kind === 'documents' &&
           <DocumentsSummary requirements={requirements.filter((r) => r.step === 8)} documents={documents} />
           }
+            {step.kind === 'payment' &&
+          <p
+            className={`text-sm font-semibold ${
+            paymentStatus === 'PAID' ? 'text-emerald-600' : 'text-red-600'}`
+            }>
+              {paymentStatus === 'PAID' ? t('payment.paidTitle') : t('payment.title')}
+            </p>
+          }
           </Card>
         )}
 
@@ -105,7 +119,7 @@ export function DynamicReview({
 
 
         <div className="flex justify-end">
-          <Button disabled={!declared || submitting} onClick={onSubmit}>
+          <Button disabled={!declared || submitting || paymentStatus !== 'PAID'} onClick={onSubmit}>
             {submitting ? t('newapp.submitting') : t('form.submit')}
           </Button>
         </div>

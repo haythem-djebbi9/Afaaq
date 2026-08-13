@@ -416,8 +416,15 @@ export function buildFormConfig(
       ],
     },
     {
-      id: 'documents',
+      id: 'payment',
       order: 8,
+      titleKey: 'step.payment',
+      hintKey: 'hint.payment',
+      kind: 'payment',
+    },
+    {
+      id: 'documents',
+      order: 9,
       titleKey: 'step.documents',
       hintKey: 'hint.documents',
       kind: 'documents',
@@ -431,7 +438,7 @@ export function buildFormConfig(
     },
     {
       id: 'review',
-      order: 9,
+      order: 10,
       titleKey: 'step.review',
       kind: 'review',
     },

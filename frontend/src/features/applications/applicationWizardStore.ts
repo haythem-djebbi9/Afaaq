@@ -24,6 +24,9 @@ interface WizardState {
   country: CountryCode | null;
   applicationId: string | null;
   status: api.ApplicationStatus | null;
+  paymentStatus: api.PaymentStatus | null;
+  startingCheckout: boolean;
+  checkoutError: string | null;
   requirements: api.DocumentRequirement[];
   documents: Record<string, api.DocumentRecord>;
   uploads: Record<string, UploadSlotState>;
@@ -45,6 +48,8 @@ interface WizardState {
   saveStep: (step: StepConfig, formData: Record<string, unknown>) => Promise<boolean>;
   uploadFile: (type: string, file: File) => Promise<void>;
   removeDocument: (type: string) => Promise<void>;
+  startCheckout: () => Promise<void>;
+  refreshPaymentStatus: () => Promise<void>;
   submit: () => Promise<boolean>;
   reset: () => void;
 }
@@ -54,6 +59,9 @@ const initialState = {
   country: null as CountryCode | null,
   applicationId: null as string | null,
   status: null as api.ApplicationStatus | null,
+  paymentStatus: null as api.PaymentStatus | null,
+  startingCheckout: false,
+  checkoutError: null as string | null,
   requirements: [] as api.DocumentRequirement[],
   documents: {} as Record<string, api.DocumentRecord>,
   uploads: {} as Record<string, UploadSlotState>,
@@ -75,6 +83,7 @@ function hydrate(application: api.ApplicationRecord) {
   return {
     applicationId: application.id,
     status: application.status,
+    paymentStatus: application.paymentStatus,
     requirements: application.requirements,
     documents: Object.fromEntries(application.documents.map((d) => [d.type, d])),
     stepData: {
@@ -216,6 +225,33 @@ export const useApplicationWizard = create<WizardState>((set, get) => ({
     } catch (err) {
       const message = err instanceof Error ? err.message : 'auth.error.generic';
       set((state) => ({ uploads: { ...state.uploads, [type]: { progress: 0, error: message } } }));
+    }
+  },
+
+  startCheckout: async () => {
+    const { applicationId } = get();
+    const token = getStoredToken();
+    if (!applicationId || !token) return;
+
+    set({ startingCheckout: true, checkoutError: null });
+    try {
+      const { url } = await api.createCheckoutSession(token, applicationId);
+      window.location.href = url;
+    } catch {
+      set({ startingCheckout: false, checkoutError: 'auth.error.generic' });
+    }
+  },
+
+  refreshPaymentStatus: async () => {
+    const { applicationId } = get();
+    const token = getStoredToken();
+    if (!applicationId || !token) return;
+
+    try {
+      const application = await api.getApplication(token, applicationId);
+      set({ paymentStatus: application.paymentStatus, status: application.status });
+    } catch {
+      // Best-effort refresh — the user can retry from the payment step if this fails.
     }
   },
 

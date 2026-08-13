@@ -163,6 +163,13 @@ export class ApplicationsService {
 
   async submit(userId: string, applicationId: string) {
     const application = await this.getOwned(userId, applicationId);
+
+    if (application.paymentStatus !== 'PAID') {
+      throw new BadRequestException(
+        'Le paiement des frais de dossier est requis avant de soumettre la candidature.',
+      );
+    }
+
     const required = requiredTypesFor(application.service, application.country);
     const uploaded = new Set(
       application.documents
@@ -230,6 +237,7 @@ export class ApplicationsService {
       trainings: application.trainings,
       experience: application.experience,
       objective: application.objective,
+      paymentStatus: application.paymentStatus,
       requirements: requirementsFor(application.service, application.country),
       documents: application.documents.map((d) => this.toDocumentResponse(d)),
     };

@@ -24,10 +24,10 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  applications   Application[]
-  notifications  Notification[]
-  sectionReviews SectionReview[] @relation("SectionReviewer")
-  dossierReviews DossierReview[] @relation("DossierReviewer")
+  applications    Application[]
+  notifications   Notification[]
+  sectionReviews  SectionReview[]  @relation("SectionReviewer")
+  dossierReviews  DossierReview[]  @relation("DossierReviewer")
   chatbotMessages ChatbotMessage[]
 
   @@map("users")
@@ -57,25 +57,34 @@ enum DocumentStatus {
   ERROR
 }
 
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
+
 model Application {
-  id             String            @id @default(uuid())
-  userId         String
-  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  service        ServiceType
-  country        CountryCode
-  status         ApplicationStatus @default(DRAFT)
-  personal       Json?
-  passport       Json?
-  languages      Json?
-  education      Json?
-  trainings      Json?
-  experience     Json?
-  objective      Json?
-  documents      Document[]
-  sectionReviews SectionReview[]
-  dossierReview  DossierReview?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id                    String            @id @default(uuid())
+  userId                String
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service               ServiceType
+  country               CountryCode
+  status                ApplicationStatus @default(DRAFT)
+  personal              Json?
+  passport              Json?
+  languages             Json?
+  education             Json?
+  trainings             Json?
+  experience            Json?
+  objective             Json?
+  paymentStatus         PaymentStatus     @default(UNPAID)
+  stripeSessionId       String?
+  stripePaymentIntentId String?
+  paidAt                DateTime?
+  documents             Document[]
+  sectionReviews        SectionReview[]
+  dossierReview         DossierReview?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
 
   @@map("applications")
 }
