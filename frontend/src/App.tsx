@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { LocaleProvider } from '@/shared/i18n/LocaleContext';
 import { ChatWidget } from '@/features/chatbot/ChatWidget';
+import { ColdStartBanner } from '@/shared/components/ColdStartBanner';
 import { AdminCandidateDetailPage } from '@/features/admin/AdminCandidateDetailPage';
 import { AdminCandidatesPage } from '@/features/admin/AdminCandidatesPage';
 import { Application } from '@/features/applications/Application';
@@ -30,6 +31,7 @@ export function App() {
   return (
     <BrowserRouter>
       <LocaleProvider>
+        <ColdStartBanner />
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Home />} />

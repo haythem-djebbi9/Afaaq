@@ -28,8 +28,8 @@ interface AuthContextValue {
   user: AuthUser | null;
   token: string | null;
   initializing: boolean;
-  login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
+  login: (payload: LoginPayload) => Promise<AuthUser>;
+  register: (payload: RegisterPayload) => Promise<AuthUser>;
   logout: () => void;
 }
 
@@ -65,11 +65,13 @@ export function AuthProvider({ children }: {children: ReactNode;}) {
   const login = useCallback(async (payload: LoginPayload) => {
     const session = await loginUser(payload);
     persist({ token: session.accessToken, user: session.user });
+    return session.user;
   }, [persist]);
 
   const register = useCallback(async (payload: RegisterPayload) => {
     const session = await registerUser(payload);
     persist({ token: session.accessToken, user: session.user });
+    return session.user;
   }, [persist]);
 
   const logout = useCallback(() => {

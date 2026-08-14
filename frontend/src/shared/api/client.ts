@@ -1,4 +1,20 @@
+import { beginColdStartRetry, endColdStartRetry } from '@/shared/api/coldStart';
+
 export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+
+const COLD_START_RETRY_DELAY_MS = 3000;
+// Render's free tier spins the backend down after inactivity, and Neon's free tier scales
+// its compute to zero too — the first request after a pause can time out or bounce off a
+// gateway that isn't ready yet. Those are retried once, transparently, before surfacing
+// an error to the caller.
+function isColdStartFailure(res: Response | null): boolean {
+  if (!res) return true; // fetch() itself threw — network error, possibly the host still waking up
+  return [502, 503, 504].includes(res.status);
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const SESSION_STORAGE_KEY = 'afaaq.session';
 
@@ -47,9 +63,8 @@ export interface ApiRequestOptions extends RequestInit {
 export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
   const { token, mapErrorCode, headers, ...rest } = options;
 
-  let res: Response;
-  try {
-    res = await fetch(`${API_URL}${path}`, {
+  const doFetch = () =>
+    fetch(`${API_URL}${path}`, {
       ...rest,
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +72,27 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
         ...(headers ?? {}),
       },
     });
+
+  let res: Response | null;
+  try {
+    res = await doFetch();
   } catch {
+    res = null;
+  }
+
+  if (isColdStartFailure(res)) {
+    beginColdStartRetry();
+    try {
+      await delay(COLD_START_RETRY_DELAY_MS);
+      res = await doFetch();
+    } catch {
+      res = null;
+    } finally {
+      endColdStartRetry();
+    }
+  }
+
+  if (!res) {
     throw new ApiError(0, 'network', 'network');
   }
 

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CheckCircle2Icon, CircleDashedIcon, FileSearchIcon, Loader2Icon } from 'lucide-react';
+import { CheckCircle2Icon, CircleDashedIcon, EyeIcon, FileSearchIcon, Loader2Icon } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useLocale } from '@/shared/i18n/LocaleContext';
-import { extractDocument } from '@/features/admin/admin.api';
+import { extractDocument, fetchAdminDocumentPreviewUrl } from '@/features/admin/admin.api';
 import type { DocumentRecord, DocumentRequirement } from '@/features/applications/applications.api';
 
 interface Props {
@@ -64,6 +64,37 @@ function DocumentExtractPanel({ applicationId, documentId }: {applicationId: str
 
 }
 
+function ViewFileButton({ applicationId, documentId }: {applicationId: string;documentId: string;}) {
+  const { t } = useLocale();
+  const { token } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const handleView = async () => {
+    if (!token || loading) return;
+    setLoading(true);
+    try {
+      const url = await fetchAdminDocumentPreviewUrl(token, applicationId, documentId);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch {
+      // Best-effort — the admin can retry.
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={() => void handleView()}
+      disabled={loading}
+      className="inline-flex items-center gap-1.5 text-xs font-semibold text-afaaq-blue hover:underline disabled:opacity-50">
+
+      {loading ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <EyeIcon className="h-3.5 w-3.5" aria-hidden="true" />}
+      {t('admin.doc.view')}
+    </button>);
+
+}
+
 export function AdminDocumentsPanel({ applicationId, requirements, documents }: Props) {
   const { t } = useLocale();
 
@@ -87,7 +118,12 @@ export function AdminDocumentsPanel({ applicationId, requirements, documents }: 
                 </span>
               }
             </div>
-            {doc && <DocumentExtractPanel applicationId={applicationId} documentId={doc.id} />}
+            {doc &&
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                <ViewFileButton applicationId={applicationId} documentId={doc.id} />
+                <DocumentExtractPanel applicationId={applicationId} documentId={doc.id} />
+              </div>
+            }
           </div>);
 
       })}

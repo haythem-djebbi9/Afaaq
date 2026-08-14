@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
@@ -44,5 +45,20 @@ export class AdminController {
   @Get('applications/:id/documents/:documentId/extract')
   extract(@Param('id') id: string, @Param('documentId') documentId: string) {
     return this.reviewService.extractDocument(id, documentId);
+  }
+
+  @Get('applications/:id/documents/:documentId/file')
+  async getFile(
+    @Param('id') id: string,
+    @Param('documentId') documentId: string,
+    @Res() res: Response,
+  ) {
+    const file = await this.reviewService.getFile(id, documentId);
+    res.setHeader('Content-Type', file.mimeType);
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="${encodeURIComponent(file.originalName)}"`,
+    );
+    res.sendFile(file.path);
   }
 }

@@ -27,6 +27,12 @@ export class PaymentsController {
     return this.paymentsService.createCheckoutSession(req.user.userId, id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('applications/:id/sync-payment')
+  syncPaymentStatus(@Req() req: AuthedRequest, @Param('id') id: string) {
+    return this.paymentsService.syncPaymentStatus(req.user.userId, id);
+  }
+
   // Public endpoint called by Stripe — authenticated via webhook signature, not a JWT.
   @Post('payments/webhook')
   @HttpCode(200)

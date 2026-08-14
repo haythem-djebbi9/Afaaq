@@ -52,8 +52,11 @@ export function SignIn() {
 
     setSubmitting(true);
     try {
-      await login({ email, password });
-      const redirectTo = (location.state as {from?: string;} | null)?.from ?? '/services';
+      const loggedInUser = await login({ email, password });
+      const redirectTo =
+        loggedInUser.role === 'ADMIN' ?
+        '/admin' :
+        (location.state as {from?: string;} | null)?.from ?? '/services';
       navigate(redirectTo, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {

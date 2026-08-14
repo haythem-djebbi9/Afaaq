@@ -72,7 +72,7 @@ npm run dev
 ```bash
 cp .env.example .env
 # renseigner des secrets forts : JWT_SECRET, POSTGRES_PASSWORD, GROQ_API_KEY
-# ajuster CORS_ORIGIN et VITE_API_URL pour le domaine réel si le front n'est pas
+# ajuster FRONTEND_URL et VITE_API_URL pour le domaine réel si le front n'est pas
 # servi derrière le proxy nginx du conteneur frontend
 
 docker compose up --build -d
@@ -80,7 +80,7 @@ docker compose up --build -d
 
 - Le backend n'utilise jamais `synchronize` : les migrations Prisma versionnées
   (`backend/prisma/migrations`) sont rejouées via `prisma migrate deploy` à chaque démarrage.
-- Sécurité API : `helmet`, CORS restreint par `CORS_ORIGIN`, rate limiting (`@nestjs/throttler`,
+- Sécurité API : `helmet`, CORS restreint par `FRONTEND_URL`, rate limiting (`@nestjs/throttler`,
   120 req/min/IP par défaut).
 - Démarrage fail-fast : le backend refuse de démarrer si `DATABASE_URL` ou `JWT_SECRET` sont
   absents, ou si `JWT_SECRET` fait moins de 32 caractères — aucun secret par défaut n'est utilisé

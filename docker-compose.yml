@@ -26,7 +26,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required — set a strong random value (32+ chars) in .env}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       PORT: 3000
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
       LOG_LEVEL: ${LOG_LEVEL:-log}

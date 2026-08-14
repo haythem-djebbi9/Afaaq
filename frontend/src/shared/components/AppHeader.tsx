@@ -29,7 +29,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-30 w-full border-b border-ink-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[72px] w-full max-w-shell items-center gap-3 px-4 sm:gap-6 sm:px-6 lg:px-10">
-        <Link to="/services" className="rounded-md shrink-0" aria-label={t('brand.name')}>
+        <Link to={user?.role === 'ADMIN' ? '/admin' : '/services'} className="rounded-md shrink-0" aria-label={t('brand.name')}>
           <span className="sm:hidden">
             <Logo size={34} variant="mark" />
           </span>
@@ -84,6 +84,7 @@ export function AppHeader() {
                     <p className="truncate font-display text-sm font-bold text-ink-900">{user?.fullName}</p>
                     <p className="truncate text-xs text-ink-500">{user?.email}</p>
                   </div>
+                  {user?.role !== 'ADMIN' &&
                   <Link
                     to="/mon-dossier"
                     onClick={() => setMenuOpen(false)}
@@ -92,6 +93,7 @@ export function AppHeader() {
                     <FolderIcon className="h-4 w-4" aria-hidden="true" />
                     {t('nav.myDossier')}
                   </Link>
+                  }
                   <button
                     type="button"
                     onClick={handleLogout}

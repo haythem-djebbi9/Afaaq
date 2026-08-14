@@ -44,7 +44,9 @@ export class PaymentsService {
 
     const session = await this.stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card'],
+      // This is a flat administrative fee, not a taxable retail product — opt out of
+      // Managed Payments so Stripe doesn't require a product tax code for it.
+      managed_payments: { enabled: false },
       line_items: [
         {
           quantity: 1,
@@ -104,22 +106,54 @@ export class PaymentsService {
         ? session.payment_intent
         : session.payment_intent?.id;
 
-    // Only mark the application matching the exact session we issued as paid — guards
-    // against a replayed or unrelated webhook event flipping the wrong application.
+    const marked = await this.markPaid(applicationId, session.id, paymentIntentId);
+    if (!marked) {
+      this.logger.warn(
+        `checkout.session.completed for session ${session.id} did not match application ${applicationId}`,
+      );
+    }
+  }
+
+  // Called when the user lands back on the return_url after Stripe Checkout. Webhooks are the
+  // primary path for marking an application paid, but they require a public endpoint (or, for
+  // local dev, `stripe listen` forwarding) that isn't always set up — so we also reconcile
+  // directly against Stripe here as a fallback, using our own record of the session id rather
+  // than trusting anything from the query string.
+  async syncPaymentStatus(userId: string, applicationId: string) {
+    const application = await this.getOwned(userId, applicationId);
+    if (application.paymentStatus === 'PAID') return application;
+    if (!application.stripeSessionId) return application;
+
+    const session = await this.stripe.checkout.sessions.retrieve(
+      application.stripeSessionId,
+    );
+    if (session.payment_status !== 'paid') return application;
+
+    const paymentIntentId =
+      typeof session.payment_intent === 'string'
+        ? session.payment_intent
+        : session.payment_intent?.id;
+
+    await this.markPaid(applicationId, session.id, paymentIntentId);
+    return this.getOwned(userId, applicationId);
+  }
+
+  // Only marks the application matching the exact session we issued as paid — guards against a
+  // replayed or unrelated event flipping the wrong application.
+  private async markPaid(
+    applicationId: string,
+    sessionId: string,
+    paymentIntentId: string | undefined,
+  ) {
     const result = await this.prisma.application.updateMany({
-      where: { id: applicationId, stripeSessionId: session.id },
+      where: { id: applicationId, stripeSessionId: sessionId },
       data: {
         paymentStatus: 'PAID',
         paidAt: new Date(),
         stripePaymentIntentId: paymentIntentId,
       },
     });
-
-    if (result.count === 0) {
-      this.logger.warn(
-        `checkout.session.completed for session ${session.id} did not match application ${applicationId}`,
-      );
-    }
+    return result.count > 0;
   }
 
   private async getOwned(userId: string, id: string) {

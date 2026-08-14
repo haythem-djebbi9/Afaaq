@@ -245,6 +245,21 @@ export class ReviewService {
     return { original: text, translatedDe };
   }
 
+  async getFile(applicationId: string, documentId: string) {
+    const document = await this.prisma.document.findFirst({
+      where: { id: documentId, applicationId },
+    });
+    if (!document) {
+      throw new NotFoundException('Document introuvable.');
+    }
+
+    return {
+      path: join(this.uploadsRoot, applicationId, document.storedName),
+      mimeType: document.mimeType,
+      originalName: document.originalName,
+    };
+  }
+
   async getClientReview(userId: string, applicationId: string) {
     const application = await this.prisma.application.findUnique({
       where: { id: applicationId },

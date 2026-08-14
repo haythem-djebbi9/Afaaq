@@ -1,4 +1,4 @@
-import { apiRequest, type ApiErrorCode } from '@/shared/api/client';
+import { API_URL, ApiError, apiRequest, type ApiErrorCode } from '@/shared/api/client';
 import type { BackendCountryCode, BackendServiceType, DocumentRecord, DocumentRequirement } from '@/features/applications/applications.api';
 import type { DossierReview, SectionReview, SectionStatus } from '@/features/applications/review.api';
 import type { FormConfig } from '@/shared/types/formConfig';
@@ -100,4 +100,18 @@ export function extractDocument(token: string, applicationId: string, documentId
     `/admin/applications/${applicationId}/documents/${documentId}/extract`,
     { token, mapErrorCode: mapAdminErrorCode },
   );
+}
+
+export async function fetchAdminDocumentPreviewUrl(
+  token: string,
+  applicationId: string,
+  documentId: string
+): Promise<string> {
+  const res = await fetch(
+    `${API_URL}/admin/applications/${applicationId}/documents/${documentId}/file`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  if (!res.ok) throw new ApiError(res.status, mapAdminErrorCode(res.status), `HTTP ${res.status}`);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
 }

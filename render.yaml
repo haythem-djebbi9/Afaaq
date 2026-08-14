@@ -1,3 +1,5 @@
+# The frontend deploys separately on Vercel (see frontend/vercel.json and DEPLOY.md) —
+# only the backend API is a Render service.
 services:
   - name: afaaq-backend
     type: web
@@ -9,6 +11,8 @@ services:
     dockerContext: ./
     healthCheckPath: /health
     envVars:
+      # Neon connection string — paste from the Neon dashboard. SSL/pooling for it are
+      # handled automatically in backend/src/prisma/prisma.service.ts.
       - key: DATABASE_URL
         sync: false
       - key: JWT_SECRET
@@ -27,21 +31,12 @@ services:
         sync: false
       - key: STRIPE_APPLICATION_FEE_CENTS
         value: "2000"
-      - key: CORS_ORIGIN
-        value: https://afaaq-frontend.onrender.com
+      # Comma-separated exact origins (any https://*.vercel.app preview URL is always
+      # allowed automatically, see main.ts). Set to the real Vercel URL after the first
+      # Vercel deploy, then add https://afaaq.de,https://www.afaaq.de once DNS is live.
+      - key: FRONTEND_URL
+        sync: false
+      # Used to build the Stripe Checkout redirect — same value as FRONTEND_URL's
+      # primary/production origin.
       - key: APP_URL
-        value: https://afaaq-frontend.onrender.com
-
-  - name: afaaq-frontend
-    type: web
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://afaaq-backend.onrender.com/api
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+        sync: false

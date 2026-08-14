@@ -248,7 +248,7 @@ export const useApplicationWizard = create<WizardState>((set, get) => ({
     if (!applicationId || !token) return;
 
     try {
-      const application = await api.getApplication(token, applicationId);
+      const application = await api.syncPaymentStatus(token, applicationId);
       set({ paymentStatus: application.paymentStatus, status: application.status });
     } catch {
       // Best-effort refresh — the user can retry from the payment step if this fails.

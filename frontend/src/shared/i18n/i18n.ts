@@ -421,6 +421,13 @@ export const dictionary: Record<string, Entry> = {
   'admin.remark.hint': { fr: 'Traduite automatiquement pour le candidat.', ar: 'تُترجم تلقائيًا للمترشح.', de: 'Wird automatisch für den Kandidaten übersetzt.', en: 'Automatically translated for the candidate.' },
   'admin.action.needsCorrection': { fr: 'Demander une correction', ar: 'طلب تصحيح', de: 'Korrektur anfordern', en: 'Request correction' },
   'admin.action.approve': { fr: 'Approuver', ar: 'موافقة', de: 'Genehmigen', en: 'Approve' },
+  'admin.doc.view': { fr: 'Voir le fichier', ar: 'عرض الملف', de: 'Datei ansehen', en: 'View file' },
+  'coldStart.waking': {
+    fr: 'Réveil du serveur en cours, un instant…',
+    ar: 'جارٍ تشغيل الخادم، لحظة من فضلك…',
+    de: 'Server wird gestartet, einen Moment…',
+    en: 'Waking up the server, one moment…'
+  },
   'admin.doc.extract': { fr: 'Extraire le texte', ar: 'استخراج النص', de: 'Text extrahieren', en: 'Extract text' },
   'admin.doc.extractError': { fr: 'Échec de l’extraction du texte.', ar: 'فشل استخراج النص.', de: 'Textextraktion fehlgeschlagen.', en: 'Text extraction failed.' },
   'admin.doc.original': { fr: 'Original', ar: 'النص الأصلي', de: 'Original', en: 'Original' },

@@ -14,5 +14,9 @@ export function ProtectedRoute({ children }: {children: ReactElement;}) {
     return <Navigate to="/signin" replace state={{ from: location.pathname }} />;
   }
 
+  if (user.role === 'ADMIN') {
+    return <Navigate to="/admin" replace />;
+  }
+
   return children;
 }

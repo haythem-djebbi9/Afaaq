@@ -98,6 +98,14 @@ export function createCheckoutSession(token: string, applicationId: string) {
   });
 }
 
+export function syncPaymentStatus(token: string, applicationId: string) {
+  return apiRequest<ApplicationRecord>(`/applications/${applicationId}/sync-payment`, {
+    token,
+    method: 'POST',
+    mapErrorCode: codeFromStatus,
+  });
+}
+
 export function deleteDocument(token: string, applicationId: string, documentId: string) {
   return apiRequest<{ success: boolean }>(`/applications/${applicationId}/documents/${documentId}`, {
     token,

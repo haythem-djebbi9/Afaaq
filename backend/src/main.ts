@@ -24,11 +24,27 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  const corsOrigin = (process.env.CORS_ORIGIN ?? 'http://localhost:5173')
+  const allowedOrigins = (
+    process.env.FRONTEND_URL ?? 'http://localhost:5173'
+  )
     .split(',')
-    .map((origin) => origin.trim());
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  // Vercel preview deployments get a unique *.vercel.app subdomain per build/branch, so a
+  // fixed list can never enumerate them — always trust that pattern in addition to whatever
+  // exact origins (production Vercel URL, afaaq.de) are configured in FRONTEND_URL.
+  const vercelPreviewPattern = /^https:\/\/[a-z0-9-]+\.vercel\.app$/;
 
-  app.enableCors({ origin: corsOrigin, credentials: true });
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // non-browser clients (curl, health checks)
+      if (allowedOrigins.includes(origin) || vercelPreviewPattern.test(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+    credentials: true,
+  });
   app.setGlobalPrefix('api', { exclude: ['health'] });
   app.useGlobalPipes(
     new ValidationPipe({
