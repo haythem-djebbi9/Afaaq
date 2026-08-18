@@ -34,7 +34,7 @@ export function MarketingHeader() {
 
       <div className="mx-auto flex h-[76px] w-full max-w-shell items-center gap-8 px-6 lg:px-10">
         <Link to="/" aria-label={t('brand.name')} className="transition-transform hover:scale-105">
-          <Logo size={40} />
+          <Logo size={54} />
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label={t('nav.services')}>

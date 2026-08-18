@@ -50,7 +50,7 @@ export function Home() {
       {/* Video story */}
       <section id="video" className="w-full bg-surface py-20 lg:py-24">
         <div className="mx-auto w-full max-w-shell px-6 lg:px-10">
-          <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="h-[440px] sm:h-[540px]">
+          <motion.div {...fadeUp} transition={{ duration: 0.5 }}>
             <VideoShowcase />
           </motion.div>
         </div>

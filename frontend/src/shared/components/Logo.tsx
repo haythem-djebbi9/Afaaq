@@ -1,51 +1,40 @@
+// The source file is a square export with ~28% white margin baked in, and it stacks the
+// mark above the "AFAAQ CONNECT" wordmark. Rendering it raw makes the logo look tiny and
+// clipped inside a header bar, so every placement crops to a measured content box instead
+// of relying on object-fit. Coordinates below were measured against the source pixels.
+const SOURCE = { w: 2695, h: 2738 };
+
+const CROPS = {
+  // Whole lockup: mark + wordmark + tagline, white margin trimmed off.
+  full: { x: 392, y: 288, w: 1928, h: 1969 },
+  // Just the triangular mark — for tight spots where the wordmark would be unreadable.
+  mark: { x: 687, y: 288, w: 1317, h: 1304 }
+};
 
 interface LogoProps {
+  /** Rendered height in px. Width is derived from the crop's aspect ratio. */
   size?: number;
-  variant?: 'full' | 'mark';
-  tone?: 'dark' | 'light';
-  tagline?: string;
+  variant?: keyof typeof CROPS;
+  className?: string;
 }
 
-export function Logo({ size = 40, variant = 'full', tone = 'dark', tagline }: LogoProps) {
-  const blue = tone === 'light' ? '#FFFFFF' : '#0D47A1';
-  const wordmark = tone === 'light' ? 'text-white' : 'text-afaaq-blue';
+export function Logo({ size = 40, variant = 'full', className = '' }: LogoProps) {
+  const crop = CROPS[variant];
 
   return (
-    <span className="inline-flex items-center gap-3">
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 48 48"
-        role="img"
-        aria-label="AFAAQ CONNECT"
-        className="shrink-0">
-        
-        <path
-          d="M24 4.5c1.6 0 3.1.85 3.9 2.24l14.3 24.8a4.5 4.5 0 1 1-7.8 4.5L24 17.6 13.6 36.04a4.5 4.5 0 1 1-7.8-4.5l14.3-24.8A4.5 4.5 0 0 1 24 4.5Z"
-          fill={blue} />
-        
-        <path
-          d="M22.2 34.6c.7-5.6 1.7-9.7 3.6-13.1l2.1 1.6c-1.5 3.3-2.2 7.1-2.3 11.5h-3.4Z"
-          fill="#FFC107" />
-        
-        <circle cx="26.9" cy="17.9" r="1.9" fill="#FFC107" />
-      </svg>
-      {variant === 'full' &&
-      <span className="flex flex-col leading-none">
-          <span className={`font-display text-[17px] font-extrabold tracking-[0.14em] ${wordmark}`}>
-            AFAAQ<span className="text-afaaq-gold"> CONNECT</span>
-          </span>
-          {tagline &&
-        <span
-          className={`mt-1 text-[10px] tracking-[0.12em] ${
-          tone === 'light' ? 'text-white/70' : 'text-ink-500'}`
-          }>
-          
-              {tagline}
-            </span>
-        }
-        </span>
-      }
-    </span>);
+    <span
+      role="img"
+      aria-label="AFAAQ CONNECT"
+      className={`inline-block shrink-0 bg-no-repeat ${className}`}
+      style={{
+        height: size,
+        width: size * (crop.w / crop.h),
+        backgroundImage: 'url(/logo.jpg)',
+        // Standard sprite-crop maths: scale the image up so the crop box fills the
+        // element, then offset it proportionally to bring that box into view.
+        backgroundSize: `${SOURCE.w / crop.w * 100}% ${SOURCE.h / crop.h * 100}%`,
+        backgroundPosition: `${crop.x / (SOURCE.w - crop.w) * 100}% ${
+        crop.y / (SOURCE.h - crop.h) * 100}%`
+      }} />);
 
 }

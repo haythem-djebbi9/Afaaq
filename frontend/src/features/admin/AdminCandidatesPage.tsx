@@ -91,70 +91,124 @@ export function AdminCandidatesPage() {
           </div>
         </Card>
 
-        <Card className="mt-6 overflow-x-auto p-0">
-          <table className="w-full text-start text-sm">
-            <thead>
-              <tr className="border-b border-ink-200/70 text-xs font-semibold uppercase tracking-wide text-ink-500">
-                <th className="px-5 py-3 text-start">{t('admin.col.candidate')}</th>
-                <th className="px-5 py-3 text-start">{t('admin.col.service')}</th>
-                <th className="px-5 py-3 text-start">{t('admin.col.country')}</th>
-                <th className="px-5 py-3 text-start">{t('admin.col.status')}</th>
-                <th className="px-5 py-3 text-start">{t('admin.col.completion')}</th>
-                <th className="px-5 py-3 text-start">{t('admin.col.date')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!loading && rows.length === 0 &&
-              <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-ink-500">
-                    {t('admin.candidates.empty')}
-                  </td>
-                </tr>
-              }
-              {rows.map((row) => {
-                const country = countries.find((c) => c.code === row.country);
-                const service = services.find((s) => s.id.toUpperCase() === row.service);
-                return (
-                  <tr
-                    key={row.id}
-                    onClick={() => navigate(`/admin/${row.id}`)}
-                    className="cursor-pointer border-b border-ink-200/50 transition-colors last:border-b-0 hover:bg-surface">
+        {!loading && rows.length === 0 &&
+        <Card className="mt-6 p-10 text-center text-sm text-ink-500">{t('admin.candidates.empty')}</Card>
+        }
 
-                    <td className="px-5 py-4">
-                      <p className="font-medium text-ink-900">{row.fullName}</p>
-                      <p className="text-xs text-ink-500">{row.email}</p>
-                    </td>
-                    <td className="px-5 py-4 text-ink-700">{service ? t(service.titleKey) : row.service}</td>
-                    <td className="px-5 py-4 text-ink-700">
-                      <span aria-hidden="true">{country?.flag}</span> {country?.name[lang] ?? row.country}
-                    </td>
-                    <td className="px-5 py-4">
+        {rows.length > 0 &&
+        <>
+            {/* Mobile: one card per candidate — a 6-column table has no usable mobile layout. */}
+            <div className="mt-6 flex flex-col gap-3 sm:hidden">
+              {rows.map((row) => {
+              const country = countries.find((c) => c.code === row.country);
+              const service = services.find((s) => s.id.toUpperCase() === row.service);
+              return (
+                <Card
+                  key={row.id}
+                  onClick={() => navigate(`/admin/${row.id}`)}
+                  className="cursor-pointer p-4 active:bg-surface">
+
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-ink-900">{row.fullName}</p>
+                        <p className="truncate text-xs text-ink-500">{row.email}</p>
+                      </div>
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_STYLES[row.reviewStatus]}`}>
+                      className={`inline-flex shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_STYLES[row.reviewStatus]}`}>
 
                         {t(`admin.status.${row.reviewStatus === 'needs_correction' ? 'needsCorrection' : row.reviewStatus}`)}
                       </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-ink-200">
-                          <div
-                            className="h-full rounded-full bg-afaaq-gold"
-                            style={{ width: `${row.completion}%` }} />
-
-                        </div>
-                        <span className="text-xs font-semibold text-ink-700">{row.completion}%</span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+                      <div>
+                        <p className="text-ink-500">{t('admin.col.service')}</p>
+                        <p className="mt-0.5 text-ink-700">{service ? t(service.titleKey) : row.service}</p>
                       </div>
-                    </td>
-                    <td className="px-5 py-4 text-xs text-ink-500">
-                      {new Date(row.createdAt).toLocaleDateString()}
-                    </td>
-                  </tr>);
+                      <div>
+                        <p className="text-ink-500">{t('admin.col.country')}</p>
+                        <p className="mt-0.5 text-ink-700">
+                          <span aria-hidden="true">{country?.flag}</span> {country?.name[lang] ?? row.country}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-ink-500">{t('admin.col.completion')}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <div className="h-1.5 w-14 overflow-hidden rounded-full bg-ink-200">
+                            <div className="h-full rounded-full bg-afaaq-gold" style={{ width: `${row.completion}%` }} />
+                          </div>
+                          <span className="font-semibold text-ink-700">{row.completion}%</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-ink-500">{t('admin.col.date')}</p>
+                        <p className="mt-0.5 text-ink-700">{new Date(row.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </Card>);
 
-              })}
-            </tbody>
-          </table>
-        </Card>
+            })}
+            </div>
+
+            {/* Desktop/tablet: full table. */}
+            <Card className="mt-6 hidden overflow-x-auto p-0 sm:block">
+              <table className="w-full text-start text-sm">
+                <thead>
+                  <tr className="border-b border-ink-200/70 text-xs font-semibold uppercase tracking-wide text-ink-500">
+                    <th className="px-5 py-3 text-start">{t('admin.col.candidate')}</th>
+                    <th className="px-5 py-3 text-start">{t('admin.col.service')}</th>
+                    <th className="px-5 py-3 text-start">{t('admin.col.country')}</th>
+                    <th className="px-5 py-3 text-start">{t('admin.col.status')}</th>
+                    <th className="px-5 py-3 text-start">{t('admin.col.completion')}</th>
+                    <th className="px-5 py-3 text-start">{t('admin.col.date')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => {
+                  const country = countries.find((c) => c.code === row.country);
+                  const service = services.find((s) => s.id.toUpperCase() === row.service);
+                  return (
+                    <tr
+                      key={row.id}
+                      onClick={() => navigate(`/admin/${row.id}`)}
+                      className="cursor-pointer border-b border-ink-200/50 transition-colors last:border-b-0 hover:bg-surface">
+
+                        <td className="px-5 py-4">
+                          <p className="font-medium text-ink-900">{row.fullName}</p>
+                          <p className="text-xs text-ink-500">{row.email}</p>
+                        </td>
+                        <td className="px-5 py-4 text-ink-700">{service ? t(service.titleKey) : row.service}</td>
+                        <td className="px-5 py-4 text-ink-700">
+                          <span aria-hidden="true">{country?.flag}</span> {country?.name[lang] ?? row.country}
+                        </td>
+                        <td className="px-5 py-4">
+                          <span
+                          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_STYLES[row.reviewStatus]}`}>
+
+                            {t(`admin.status.${row.reviewStatus === 'needs_correction' ? 'needsCorrection' : row.reviewStatus}`)}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2">
+                            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-ink-200">
+                              <div
+                              className="h-full rounded-full bg-afaaq-gold"
+                              style={{ width: `${row.completion}%` }} />
+
+                            </div>
+                            <span className="text-xs font-semibold text-ink-700">{row.completion}%</span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-xs text-ink-500">
+                          {new Date(row.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>);
+
+                })}
+                </tbody>
+              </table>
+            </Card>
+          </>
+        }
       </main>
     </div>);
 

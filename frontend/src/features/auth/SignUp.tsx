@@ -46,7 +46,8 @@ export function SignUp() {
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneCode, setPhoneCode] = useState('+216');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [residence, setResidence] = useState('TN');
@@ -90,7 +91,7 @@ export function SignUp() {
         fullName: fullName.trim(),
         email,
         password,
-        phone: phone.trim() || undefined,
+        phone: [phoneCode.trim(), phoneNumber.trim()].filter(Boolean).join(' ') || undefined,
         residence
       });
       navigate('/services', { replace: true });
@@ -142,7 +143,7 @@ export function SignUp() {
             icon={<UserIcon className="h-4 w-4" aria-hidden="true" />} />
         </motion.div>
 
-        <motion.div variants={item} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <motion.div variants={item}>
           <Input
             label={t('auth.email')}
             type="email"
@@ -155,16 +156,29 @@ export function SignUp() {
             error={emailError}
             valid={touched.email && !emailError}
             icon={<MailIcon className="h-4 w-4" aria-hidden="true" />} />
+        </motion.div>
 
-          <Input
-            label={t('auth.phone')}
-            type="tel"
-            hint={t('form.optional')}
-            autoComplete="tel"
-            placeholder="+216 22 000 000"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            icon={<PhoneIcon className="h-4 w-4" aria-hidden="true" />} />
+        <motion.div variants={item} className="flex gap-2">
+          <div className="w-[104px] shrink-0">
+            <Input
+              label={t('auth.phoneCode')}
+              type="tel"
+              autoComplete="tel-country-code"
+              placeholder="+216"
+              value={phoneCode}
+              onChange={(e) => setPhoneCode(e.target.value)} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <Input
+              label={t('auth.phone')}
+              type="tel"
+              hint={t('form.optional')}
+              autoComplete="tel-national"
+              placeholder="22 000 000"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              icon={<PhoneIcon className="h-4 w-4" aria-hidden="true" />} />
+          </div>
         </motion.div>
 
         <motion.div variants={item}>

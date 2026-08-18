@@ -29,20 +29,33 @@ export function HeroSection() {
 
   return (
     <section className="relative isolate overflow-hidden bg-afaaq-blue-900">
+      {/*
+        On phones/tablets the hero column is far taller than the 16:9 photo, so stretching
+        it full-bleed with object-cover would show only a narrow vertical slice (~19% of the
+        frame). Below lg the photo therefore gets its own 16:9 block above the copy, where it
+        renders whole; from lg up the layout is wide enough for the original full-bleed look.
+      */}
+      <div className="relative lg:hidden">
+        <img src={heroBackground} alt="" className="aspect-video w-full object-cover" />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-afaaq-blue-900 via-afaaq-blue-900/35 to-transparent"
+          aria-hidden="true" />
+      </div>
+
       <motion.img
         src={heroBackground}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 hidden h-full w-full object-cover lg:block"
         initial={{ scale: 1.08 }}
         animate={{ scale: 1 }}
         transition={{ duration: 8, ease: 'easeOut' }}
         aria-hidden="true" />
 
       <div
-        className="absolute inset-0 bg-gradient-to-r from-afaaq-blue-900/80 via-afaaq-blue-900/55 to-afaaq-blue-900/20"
+        className="absolute inset-0 hidden bg-gradient-to-r from-afaaq-blue-900/55 via-afaaq-blue-900/25 to-afaaq-blue-900/5 lg:block"
         aria-hidden="true" />
       <div
-        className="absolute inset-0 bg-gradient-to-t from-afaaq-blue-900/70 via-transparent to-transparent"
+        className="absolute inset-0 hidden bg-gradient-to-t from-afaaq-blue-900/35 via-transparent to-transparent lg:block"
         aria-hidden="true" />
       <motion.div
         className="absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(255,193,7,0.18),transparent_45%)]"

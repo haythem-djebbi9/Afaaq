@@ -31,10 +31,10 @@ export function AppHeader() {
       <div className="mx-auto flex h-[72px] w-full max-w-shell items-center gap-3 px-4 sm:gap-6 sm:px-6 lg:px-10">
         <Link to={user?.role === 'ADMIN' ? '/admin' : '/services'} className="rounded-md shrink-0" aria-label={t('brand.name')}>
           <span className="sm:hidden">
-            <Logo size={34} variant="mark" />
+            <Logo size={46} />
           </span>
           <span className="hidden sm:block">
-            <Logo size={38} />
+            <Logo size={54} />
           </span>
         </Link>
 

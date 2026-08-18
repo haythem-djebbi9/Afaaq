@@ -42,6 +42,7 @@ export const dictionary: Record<string, Entry> = {
   'auth.fullName': { fr: 'Nom complet', ar: 'الاسم الكامل', de: 'Vollständiger Name', en: 'Full name' },
   'auth.email': { fr: 'Adresse e-mail', ar: 'البريد الإلكتروني', de: 'E-Mail-Adresse', en: 'Email address' },
   'auth.phone': { fr: 'Numéro de téléphone', ar: 'رقم الهاتف', de: 'Telefonnummer', en: 'Phone number' },
+  'auth.phoneCode': { fr: 'Indicatif', ar: 'الرمز الدولي', de: 'Vorwahl', en: 'Dial code' },
   'auth.confirmPassword': { fr: 'Confirmer le mot de passe', ar: 'تأكيد كلمة المرور', de: 'Passwort bestätigen', en: 'Confirm password' },
   'auth.residence': { fr: 'Pays de résidence', ar: 'بلد الإقامة', de: 'Wohnsitzland', en: 'Country of residence' },
   'auth.terms': { fr: "J'accepte les conditions d'utilisation et la politique de confidentialité", ar: 'أوافق على شروط الاستخدام وسياسة الخصوصية', de: 'Ich akzeptiere die Nutzungsbedingungen und Datenschutzerklärung', en: 'I accept the terms of use and privacy policy' },

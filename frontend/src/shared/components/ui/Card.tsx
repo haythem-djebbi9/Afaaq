@@ -4,11 +4,13 @@ interface CardProps {
   children: ReactNode;
   className?: string;
   as?: 'div' | 'section' | 'article';
+  onClick?: () => void;
 }
 
-export function Card({ children, className = '', as: Tag = 'div' }: CardProps) {
+export function Card({ children, className = '', as: Tag = 'div', onClick }: CardProps) {
   return (
     <Tag
+      onClick={onClick}
       className={`rounded-card border border-ink-200/70 bg-white shadow-card transition-all duration-300 ease-out ${className}`}>
 
       {children}

@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AdminRoute } from '@/features/auth/AdminRoute';
-import { LoadingScreen } from '@/shared/components/LoadingScreen';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { LocaleProvider } from '@/shared/i18n/LocaleContext';
 import { ChatWidget } from '@/features/chatbot/ChatWidget';
 import { ColdStartBanner } from '@/shared/components/ColdStartBanner';
+import { SplashScreen } from '@/shared/components/SplashScreen';
 import { AdminCandidateDetailPage } from '@/features/admin/AdminCandidateDetailPage';
 import { AdminCandidatesPage } from '@/features/admin/AdminCandidatesPage';
 import { Application } from '@/features/applications/Application';
@@ -19,17 +19,22 @@ import { SignIn } from '@/features/auth/SignIn';
 import { SignUp } from '@/features/auth/SignUp';
 
 export function App() {
-  const [loading, setLoading] = useState(true);
+  const [splashDone, setSplashDone] = useState(false);
 
+  // Lock scrolling while the splash covers the page so the home page can't be
+  // scrolled underneath it.
   useEffect(() => {
-    document.body.style.overflow = loading ? 'hidden' : '';
+    document.body.style.overflow = splashDone ? '' : 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [loading]);
+  }, [splashDone]);
 
   return (
     <BrowserRouter>
+      <AnimatePresence>
+        {!splashDone && <SplashScreen onFinish={() => setSplashDone(true)} />}
+      </AnimatePresence>
       <LocaleProvider>
         <ColdStartBanner />
         <AuthProvider>
@@ -92,9 +97,6 @@ export function App() {
           <ChatWidget />
         </AuthProvider>
       </LocaleProvider>
-      <AnimatePresence>
-        {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
-      </AnimatePresence>
     </BrowserRouter>);
 
 }

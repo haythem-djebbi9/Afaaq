@@ -9,7 +9,7 @@ export function MarketingFooter() {
     <footer className="w-full bg-afaaq-blue-900 py-14 text-white/70">
       <div className="mx-auto grid w-full max-w-shell gap-10 px-6 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
         <div>
-          <Logo tone="light" size={42} />
+          <Logo size={64} className="rounded-[10px] bg-white p-2.5" />
           <p className="mt-4 max-w-sm text-sm leading-6">{t('brand.pitch')}</p>
         </div>
 
@@ -40,7 +40,7 @@ export function MarketingFooter() {
       </div>
 
       <div className="mx-auto mt-10 w-full max-w-shell border-t border-white/10 px-6 pt-6 text-xs lg:px-10">
-        © 2026 AFAAQ CONNECT. {t('home.footer.rights')}
+        © 2026 AFAAQ. All Rights Reserved. | Designed &amp; Developed by Nicetek
       </div>
     </footer>);
 
