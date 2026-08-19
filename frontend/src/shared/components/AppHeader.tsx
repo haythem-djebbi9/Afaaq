@@ -30,11 +30,13 @@ export function AppHeader() {
     <header className="sticky top-0 z-30 w-full border-b border-ink-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[72px] w-full max-w-shell items-center gap-3 px-4 sm:gap-6 sm:px-6 lg:px-10">
         <Link to={user?.role === 'ADMIN' ? '/admin' : '/services'} className="rounded-md shrink-0" aria-label={t('brand.name')}>
+          {/* The app header packs in notifications, language and the avatar, so on phones
+              the symbol alone keeps the row uncluttered. */}
           <span className="sm:hidden">
-            <Logo size={46} />
+            <Logo variant="mark" size={38} />
           </span>
           <span className="hidden sm:block">
-            <Logo size={54} />
+            <Logo size={40} />
           </span>
         </Link>
 

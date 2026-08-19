@@ -68,7 +68,7 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-5 end-5 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[74px] end-5 z-40 flex flex-col items-end gap-3 lg:bottom-5">
       <AnimatePresence>
         {open && (
           <motion.div

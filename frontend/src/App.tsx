@@ -7,6 +7,7 @@ import { AuthProvider } from '@/features/auth/AuthContext';
 import { LocaleProvider } from '@/shared/i18n/LocaleContext';
 import { ChatWidget } from '@/features/chatbot/ChatWidget';
 import { ColdStartBanner } from '@/shared/components/ColdStartBanner';
+import { MobileTabBar } from '@/shared/components/MobileTabBar';
 import { SplashScreen } from '@/shared/components/SplashScreen';
 import { AdminCandidateDetailPage } from '@/features/admin/AdminCandidateDetailPage';
 import { AdminCandidatesPage } from '@/features/admin/AdminCandidatesPage';
@@ -94,6 +95,9 @@ export function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          {/* Clears the fixed bottom bar so page ends aren't hidden behind it. */}
+          <div className="h-[58px] lg:hidden" aria-hidden="true" />
+          <MobileTabBar />
           <ChatWidget />
         </AuthProvider>
       </LocaleProvider>

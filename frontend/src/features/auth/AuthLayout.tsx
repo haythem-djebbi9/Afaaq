@@ -25,7 +25,12 @@ export function AuthLayout({ children }: Props) {
             aria-hidden="true" />
           
 
-          <Logo size={64} className="relative z-10 rounded-[10px] bg-white p-2.5" />
+          <Logo
+            size={46}
+            tone="light"
+            wordmarkClassName="text-[18px]"
+            markClassName="rounded-[10px] bg-white p-1.5"
+            className="relative z-10" />
 
           <div className="relative z-10">
             <h1 className="font-display text-[34px] font-bold leading-tight text-white">
@@ -49,12 +54,12 @@ export function AuthLayout({ children }: Props) {
         </aside>
 
         <main className="flex flex-col px-6 py-8 sm:px-12 lg:px-16">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <div className="sm:hidden">
-              <Logo size={46} />
+              <Logo size={36} wordmarkClassName="text-[13px]" />
             </div>
             <div className="hidden sm:block lg:hidden">
-              <Logo size={52} />
+              <Logo size={42} />
             </div>
             <div className="ms-auto">
               <LanguageSwitcher />

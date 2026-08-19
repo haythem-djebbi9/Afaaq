@@ -7,9 +7,13 @@ export function MarketingFooter() {
 
   return (
     <footer className="w-full bg-afaaq-blue-900 py-14 text-white/70">
-      <div className="mx-auto grid w-full max-w-shell gap-10 px-6 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
+      <div className="mx-auto grid w-full max-w-shell gap-10 px-6 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
         <div>
-          <Logo size={64} className="rounded-[10px] bg-white p-2.5" />
+          <Logo
+            size={44}
+            tone="light"
+            wordmarkClassName="text-[18px]"
+            markClassName="rounded-[10px] bg-white p-1.5" />
           <p className="mt-4 max-w-sm text-sm leading-6">{t('brand.pitch')}</p>
         </div>
 

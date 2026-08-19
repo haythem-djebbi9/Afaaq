@@ -27,11 +27,12 @@ export function SplashScreen({ onFinish, durationMs = 1600 }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}>
 
+        {/* Large enough for the complete lockup, tagline included, to stay legible. */}
         <span className="sm:hidden">
-          <Logo size={148} />
+          <Logo variant="full" size={168} />
         </span>
         <span className="hidden sm:block">
-          <Logo size={196} />
+          <Logo variant="full" size={210} />
         </span>
       </motion.div>
 

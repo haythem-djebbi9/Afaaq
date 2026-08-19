@@ -389,6 +389,14 @@ export const dictionary: Record<string, Entry> = {
 
   'nav.admin': { fr: 'Administration', ar: 'الإدارة', de: 'Verwaltung', en: 'Admin' },
   'nav.myDossier': { fr: 'Mon dossier', ar: 'ملفي', de: 'Mein Antrag', en: 'My application' },
+  'nav.home': { fr: 'Accueil', ar: 'الرئيسية', de: 'Start', en: 'Home' },
+  // Short forms for the mobile tab bar, where full labels would not fit.
+  'nav.loginShort': { fr: 'Connexion', ar: 'دخول', de: 'Anmelden', en: 'Log in' },
+  'nav.signupShort': { fr: 'Inscription', ar: 'تسجيل', de: 'Registrieren', en: 'Sign up' },
+  'nav.account': { fr: 'Compte', ar: 'حسابي', de: 'Konto', en: 'Account' },
+  'nav.alerts': { fr: 'Alertes', ar: 'التنبيهات', de: 'Hinweise', en: 'Alerts' },
+  'nav.help': { fr: 'Aide', ar: 'مساعدة', de: 'Hilfe', en: 'Help' },
+  'nav.candidates': { fr: 'Candidats', ar: 'المترشحون', de: 'Kandidaten', en: 'Candidates' },
 
   'notif.title': { fr: 'Notifications', ar: 'الإشعارات', de: 'Benachrichtigungen', en: 'Notifications' },
   'notif.markAllRead': { fr: 'Tout marquer comme lu', ar: 'وضع علامة مقروء على الكل', de: 'Alle als gelesen markieren', en: 'Mark all as read' },
